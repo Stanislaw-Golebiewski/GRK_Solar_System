@@ -23,6 +23,9 @@ GLuint programLamp;
 //textures
 GLuint test_texture;
 GLuint CubemapTexture;
+GLuint sun_texture, merkury_texture, venus_texture, earth_texture, earth_moon_texture,
+mars_texture, jupiter_texture, io_texture, europa_texture,
+saturn_texture, uranus_texture, neptune_texture, ship_texture;
 
 //rotation angles
 float y_rotation_angle;
@@ -93,8 +96,8 @@ glm::vec3 lightPos(0, 0, 0);
 
 void keyboard(unsigned char key, int x, int y)
 {
-	float angleSpeed = 0.1f;
-	float moveSpeed = 0.1f;
+	float angleSpeed = 0.2f;
+	float moveSpeed = 2.0f;
 	switch(key)
 	{
 	case 'z': cameraAngle -= angleSpeed; break;
@@ -167,54 +170,54 @@ void renderPlanets()
 
 	//Merkury
 	glm::mat4 MercuryModelMatrix = glm::rotate(glm::mat4(1.0f), (glm::mediump_float)around_rotation_angle*2.0f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(0, 0, 7.0f)) * glm::scale(glm::vec3(0.3f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle*1.5f, myRotationAxis);//glm::rotate(glm::mat4(1.0f), (glm::mediump_float)rotation_angle, myRotationAxis);
-	drawObjectTexture(&sphereModel, MercuryModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, MercuryModelMatrix, merkury_texture);
 
 	//Venus
 	glm::mat4 venusmodelmatrix = glm::rotate(glm::mat4(1.0f), (glm::mediump_float)around_rotation_angle*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(0, 0, 12.0f)) * glm::scale(glm::vec3(0.95f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle, myRotationAxis);//glm::rotate(glm::mat4(1.0f), (glm::mediump_float)rotation_angle, myrotationaxis);
-	drawObjectTexture(&sphereModel, venusmodelmatrix, test_texture);
+	drawObjectTexture(&sphereModel, venusmodelmatrix, venus_texture);
 
 	//Earth
 	glm::mat4 EarthModelMatrix = glm::rotate(glm::mat4(1.0f), (glm::mediump_float)around_rotation_angle*0.6f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(-21.0f, 0, 0)) * glm::scale(glm::vec3(1.0f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle*2.0f, myRotationAxis);//glm::rotate(glm::mat4(1.0f), (glm::mediump_float)rotation_angle, myRotationAxis);
-	drawObjectTexture(&sphereModel, EarthModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, EarthModelMatrix, earth_texture);
 
 	//Earth Moon
 	glm::mat4 MoonEarthModelMatrix = glm::rotate(EarthModelMatrix, (glm::mediump_float)around_rotation_angle*0.005f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(0, 0, 3.0f)) * glm::scale(glm::vec3(0.35f));
-	drawObjectTexture(&sphereModel, MoonEarthModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, MoonEarthModelMatrix, earth_moon_texture);
 
 	//Mars
 	glm::mat4 MarsModelMatrix = glm::rotate(glm::mat4(1.0f), (glm::mediump_float)around_rotation_angle*0.3f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(-3.0f, 0, 31.0f)) * glm::scale(glm::vec3(0.5f)) * glm::rotate(glm::mat4(0.8f), (glm::mediump_float)y_rotation_angle*3.0f, myRotationAxis);//glm::rotate(glm::mat4(1.0f), (glm::mediump_float)rotation_angle, myRotationAxis);
-	drawObjectTexture(&sphereModel, MarsModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, MarsModelMatrix, mars_texture);
 
 	//Jupiter
 	glm::mat4 JupiterModelMatrix = glm::rotate(glm::mat4(0.1f), (glm::mediump_float)around_rotation_angle*0.1f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(3.0f, 0, 48.0f)) * glm::scale(glm::vec3(2.8f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle*2.0f, myRotationAxis);//glm::rotate(glm::mat4(1.0f), (glm::mediump_float)rotation_angle, myRotationAxis);
-	drawObjectTexture(&sphereModel, JupiterModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, JupiterModelMatrix, jupiter_texture);
 
 	//Jupiter Moons
 	//Io
 	glm::mat4 MoonJupiterModelMatrix = glm::rotate(JupiterModelMatrix, (glm::mediump_float)around_rotation_angle*4*MOVEMENT_SPEED, -myRotationAxis) * glm::translate(glm::vec3(0, 0, 2.0f)) * glm::scale(glm::vec3(0.12f));
-	drawObjectTexture(&sphereModel, MoonJupiterModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, MoonJupiterModelMatrix, io_texture);
 	//Europa
 	glm::mat4 Moon2JupiterModelMatrix = glm::rotate(JupiterModelMatrix, (glm::mediump_float)around_rotation_angle*0.25f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(-2.3f, 0, 0)) * glm::scale(glm::vec3(0.15f));
-	drawObjectTexture(&sphereModel, Moon2JupiterModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, Moon2JupiterModelMatrix, europa_texture);
 
 	//Saturn
 	glm::mat4 SaturnModelMatrix = glm::rotate(glm::mat4(0.25f), (glm::mediump_float)around_rotation_angle*0.05f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(-3.0f, 0, -56.0f)) * glm::scale(glm::vec3(2.2f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle*2.2f, myRotationAxis);//glm::rotate(glm::mat4(1.0f), (glm::mediump_float)rotation_angle, myRotationAxis);
-	drawObjectTexture(&sphereModel, SaturnModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, SaturnModelMatrix, saturn_texture);
 
 	//Uranus
 	glm::mat4 UraniumModelMatrix = glm::rotate(glm::mat4(0.75f), (glm::mediump_float)around_rotation_angle*0.04f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(-60.0f, 0, 0)) * glm::scale(glm::vec3(1.5f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle*1.5f, myRotationAxis);//glm::rotate(glm::mat4(1.0f), (glm::mediump_float)rotation_angle, myRotationAxis);
-	drawObjectTexture(&sphereModel, UraniumModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, UraniumModelMatrix, uranus_texture);
 
 	//Neptun
 	glm::mat4 NeptuneModelMatrix = glm::rotate(glm::mat4(0.45f), (glm::mediump_float)around_rotation_angle*0.03f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(70.0f, 0, 0)) * glm::scale(glm::vec3(1.6f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle, myRotationAxis);//glm::rotate(glm::mat4(1.0f), (glm::mediump_float)rotation_angle, myRotationAxis);
-	drawObjectTexture(&sphereModel, NeptuneModelMatrix, test_texture);
+	drawObjectTexture(&sphereModel, NeptuneModelMatrix, neptune_texture);
 }
 
 //render ship
 void renderShip()
 {
-	glm::mat4 shipModelMatrix = glm::translate(cameraPos + cameraDir * 0.5f + glm::vec3(0, -0.25f, 0)) * glm::rotate(-cameraAngle + glm::radians(90.0f), glm::vec3(0, 1, 0)) * glm::scale(glm::vec3(0.25f));
-	drawObjectTexture(&shipModel, shipModelMatrix, test_texture);
+	glm::mat4 shipModelMatrix = glm::translate(cameraPos + cameraDir * 0.5f + glm::vec3(0, -0.25f, 0)) * glm::rotate(-cameraAngle + glm::radians(180.0f), glm::vec3(0, 1, 0)) * glm::scale(glm::vec3(0.001f));
+	drawObjectTexture(&shipModel, shipModelMatrix, ship_texture);
 }
 
 //render skybox
@@ -250,7 +253,7 @@ void drawLightSource()
 	glUniformMatrix4fv(glGetUniformLocation(programLamp, "model"), 1, GL_FALSE, (float*)&SunModelMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(programLamp, "view"), 1, GL_FALSE, (float*)&cameraMatrix);
 	glUniformMatrix4fv(glGetUniformLocation(programLamp, "projection"), 1, GL_FALSE, (float*)&perspectiveMatrix);
-	Core::SetActiveTexture(test_texture, "objectTex", programLamp, 0);
+	Core::SetActiveTexture(sun_texture, "objectTex", programLamp, 0);
 	Core::DrawModel(&sphereModel);
 
 	glUseProgram(0);
@@ -281,8 +284,21 @@ void init()
 	programSkyBox = shaderLoader.CreateProgram("shaders/shader_box.vert", "shaders/shader_box.frag");
 	programLamp = shaderLoader.CreateProgram("shaders/shader_lamp.vert", "shaders/shader_lamp.frag");
 	sphereModel = obj::loadModelFromFile("models/sphere.obj");
-	shipModel = obj::loadModelFromFile("models/spaceship.obj");
+	shipModel = obj::loadModelFromFile("models/spaceship_2.obj");
 	test_texture = Core::LoadTexture("textures/grid.png");
+	sun_texture = Core::LoadTexture("textures/sun_texture.png");
+	merkury_texture = Core::LoadTexture("textures/mercury_texture.png");
+	venus_texture = Core::LoadTexture("textures/venus_texture.png");
+	earth_texture = Core::LoadTexture("textures/earth_texture.png");
+	earth_moon_texture = Core::LoadTexture("textures/moon_texture.png");
+	mars_texture = Core::LoadTexture("textures/mars_texture.png");
+	jupiter_texture = Core::LoadTexture("textures/jupiter_texture.png");
+	io_texture = Core::LoadTexture("textures/io_texture.png");
+	europa_texture = Core::LoadTexture("textures/europa_texture.png");
+	saturn_texture = Core::LoadTexture("textures/saturn_texture.png");
+	uranus_texture = Core::LoadTexture("textures/uranus_texture.png");
+	neptune_texture = Core::LoadTexture("textures/neptune_texture.png");
+	ship_texture = Core::LoadTexture("textures/ship_texture.png");
 	
 	//load Cubemap texture
 	std::vector<std::string> faces
@@ -325,7 +341,7 @@ int main(int argc, char ** argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(200, 200);
-	glutInitWindowSize(600, 600);
+	glutInitWindowSize(1000, 1000);
 	glutCreateWindow("Solar system!");
 	glewInit();
 
