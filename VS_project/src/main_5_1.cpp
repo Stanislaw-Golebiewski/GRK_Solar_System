@@ -18,6 +18,7 @@
 GLuint programColor;
 GLuint programTexture;
 GLuint programSkyBox;
+GLuint programLamp;
 
 //textures
 GLuint test_texture;
@@ -87,6 +88,8 @@ glm::vec3 cameraDir;
 glm::mat4 cameraMatrix, perspectiveMatrix;
 
 glm::vec3 lightDir = glm::normalize(glm::vec3(1.0f, -0.9f, -1.0f));
+glm::vec3 lightPos(0, 0, 0);
+
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -137,11 +140,17 @@ void drawObjectTexture(obj::Model * model, glm::mat4 modelMatrix, GLuint id)
 	GLuint program = programTexture;
 
 	glUseProgram(program);
-	Core::SetActiveTexture(id, "samp_tex", program, 0);
-	glUniform3f(glGetUniformLocation(program, "lightDir"), lightDir.x, lightDir.y, lightDir.z);
+
+	//glUniform3f(glGetUniformLocation(program, "objectColor"), color.x, color.y, color.z);
+	glUniform3f(glGetUniformLocation(program, "lightColor"), 1.0f, 1.0f, 1.0f);
+	glUniform3fv(glGetUniformLocation(program, "lightPos"), 1, &lightPos[0]);
+	glUniform3fv(glGetUniformLocation(program, "viewPos"), 1, &cameraPos[0]);
+
 	glm::mat4 transformation = perspectiveMatrix * cameraMatrix * modelMatrix;
 	glUniformMatrix4fv(glGetUniformLocation(program, "modelViewProjectionMatrix"), 1, GL_FALSE, (float*)&transformation);
 	glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"), 1, GL_FALSE, (float*)&modelMatrix);
+
+	Core::SetActiveTexture(id, "objectTex", program, 0);
 
 	Core::DrawModel(model);
 
@@ -155,9 +164,6 @@ void renderPlanets()
 	around_rotation_angle += 0.0001;
 
 	glm::vec3 myRotationAxis(0.0f, 1.0f, 0.0f);
-	//Sun
-	glm::mat4 SunModelMatrix = glm::scale(glm::vec3(4.0f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle/20, myRotationAxis);
-	drawObjectTexture(&sphereModel, SunModelMatrix, test_texture);
 
 	//Merkury
 	glm::mat4 MercuryModelMatrix = glm::rotate(glm::mat4(1.0f), (glm::mediump_float)around_rotation_angle*2.0f*MOVEMENT_SPEED, myRotationAxis) * glm::translate(glm::vec3(0, 0, 7.0f)) * glm::scale(glm::vec3(0.3f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle*1.5f, myRotationAxis);//glm::rotate(glm::mat4(1.0f), (glm::mediump_float)rotation_angle, myRotationAxis);
@@ -208,7 +214,7 @@ void renderPlanets()
 void renderShip()
 {
 	glm::mat4 shipModelMatrix = glm::translate(cameraPos + cameraDir * 0.5f + glm::vec3(0, -0.25f, 0)) * glm::rotate(-cameraAngle + glm::radians(90.0f), glm::vec3(0, 1, 0)) * glm::scale(glm::vec3(0.25f));
-	drawObjectColor(&shipModel, shipModelMatrix, glm::vec3(0.6f));
+	drawObjectTexture(&shipModel, shipModelMatrix, test_texture);
 }
 
 //render skybox
@@ -233,6 +239,23 @@ void renderSkybox()
 
 }
 
+void drawLightSource()
+{
+	glUseProgram(programLamp);
+
+	glm::mat4 SunModelMatrix = glm::scale(glm::vec3(4.0f)) * glm::rotate(glm::mat4(1.0f), (glm::mediump_float)y_rotation_angle / 20, glm::vec3(0.0f, 1.0f, 0.0f));
+	//drawObjectTexture(&sphereModel, SunModelMatrix, test_texture);
+	//glm::mat4 transformation = glm::translate(lightPos);
+	glUniform3f(glGetUniformLocation(programLamp, "lightColor"), 1.0f, 1.0f, 1.0f);
+	glUniformMatrix4fv(glGetUniformLocation(programLamp, "model"), 1, GL_FALSE, (float*)&SunModelMatrix);
+	glUniformMatrix4fv(glGetUniformLocation(programLamp, "view"), 1, GL_FALSE, (float*)&cameraMatrix);
+	glUniformMatrix4fv(glGetUniformLocation(programLamp, "projection"), 1, GL_FALSE, (float*)&perspectiveMatrix);
+	Core::SetActiveTexture(test_texture, "objectTex", programLamp, 0);
+	Core::DrawModel(&sphereModel);
+
+	glUseProgram(0);
+}
+
 void renderScene()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -241,6 +264,7 @@ void renderScene()
 	cameraMatrix = createCameraMatrix();
 	perspectiveMatrix = Core::createPerspectiveMatrix();
 
+	drawLightSource();
 	renderShip();
 	renderPlanets();
 	renderSkybox();
@@ -255,6 +279,7 @@ void init()
 	programColor = shaderLoader.CreateProgram("shaders/shader_color.vert", "shaders/shader_color.frag");
 	programTexture = shaderLoader.CreateProgram("shaders/shader_tex.vert", "shaders/shader_tex.frag");
 	programSkyBox = shaderLoader.CreateProgram("shaders/shader_box.vert", "shaders/shader_box.frag");
+	programLamp = shaderLoader.CreateProgram("shaders/shader_lamp.vert", "shaders/shader_lamp.frag");
 	sphereModel = obj::loadModelFromFile("models/sphere.obj");
 	shipModel = obj::loadModelFromFile("models/spaceship.obj");
 	test_texture = Core::LoadTexture("textures/grid.png");

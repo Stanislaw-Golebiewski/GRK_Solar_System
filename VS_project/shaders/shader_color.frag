@@ -1,13 +1,17 @@
-#version 430 core
+#version 330 core
+out vec4 FragColor;
 
-uniform vec3 objectColor;
-uniform vec3 lightDir;
+in vec3 Normal;
+in vec3 Position;
 
-in vec3 interpNormal;
+uniform samplerCube skybox;
+uniform vec3 lightColor;
+uniform vec3 lightPos;
+uniform vec3 viewPos;
 
 void main()
-{
-	vec3 normal = normalize(interpNormal);
-	float diffuse = max(dot(normal, -lightDir), 0.0);
-	gl_FragColor = vec4(objectColor * diffuse, 1.0);
+{             
+    vec3 I = normalize(Position - viewPos);
+    vec3 R = reflect(I, normalize(Normal));
+    FragColor = vec4(texture(skybox, R).rgb, 1.0);
 }
