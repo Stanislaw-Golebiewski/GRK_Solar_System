@@ -13,7 +13,7 @@ uniform sampler2D samp_tex;
 void main()
 {
 	//ambient
-   	float ambientStrength = 0.15;
+   	float ambientStrength = 0.001;
     vec3 ambient = ambientStrength * lightColor;
     //--
 

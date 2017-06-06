@@ -299,7 +299,6 @@ void init()
 	uranus_texture = Core::LoadTexture("textures/uranus_texture.png");
 	neptune_texture = Core::LoadTexture("textures/neptune_texture.png");
 	ship_texture = Core::LoadTexture("textures/ship_texture.png");
-	
 	//load Cubemap texture
 	std::vector<std::string> faces
 	{

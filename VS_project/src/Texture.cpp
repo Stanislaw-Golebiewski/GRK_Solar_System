@@ -26,6 +26,11 @@ GLuint Core::LoadTexture( const char * filepath )
 
 	unsigned long w, h;
 	std::vector<unsigned char> decoded;
+	if (buffer.empty())
+	{
+		std::cout << "Can't open file. Filepath: " << filepath << "\n";
+		return 0;
+	}
 	decodePNG(decoded, w, h, (unsigned char*)&buffer[0], buffer.size(), true);
 	
 
